@@ -1,3 +1,0 @@
-[console_scripts]
-econ-crosscheck = econworkbench.crosscheck:main
-econ-report = econworkbench.report:main
