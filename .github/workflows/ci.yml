@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install core (pure stdlib)
+        run: pip install .
+
+      - name: Crosscheck smoke — CS(2021) triple replication
+        run: |
+          econ-crosscheck examples/cs2021_mpdta/r_results.csv \
+                          examples/cs2021_mpdta/py_results.csv \
+                          examples/cs2021_mpdta/stata_results.csv
+
+      - name: Crosscheck must FAIL on corrupted results (expect exit 1)
+        run: |
+          python - <<'EOF'
+          import csv
+          rows = list(csv.DictReader(open("examples/cs2021_mpdta/r_results.csv")))
+          rows[0]["estimate"] = str(float(rows[0]["estimate"]) + 0.5)
+          w = csv.writer(open("/tmp/broken.csv", "w", newline=""))
+          w.writerow(["term", "estimate", "se", "pvalue"])
+          [w.writerow([r["term"], r["estimate"], r["se"], r["pvalue"]]) for r in rows]
+          EOF
+          if econ-crosscheck examples/cs2021_mpdta/r_results.csv /tmp/broken.csv; then
+            echo "expected FAIL but got PASS"; exit 1
+          else
+            echo "correctly caught the discrepancy"
+          fi
+
+      - name: Install report extras and render a table
+        run: |
+          pip install .[report]
+          econ-report examples/cs2021_mpdta/r_results.csv \
+                      examples/cs2021_mpdta/py_results.csv \
+                      examples/cs2021_mpdta/stata_results.csv \
+                      --title "CI smoke table" --out /tmp/ci_table
+          test -s /tmp/ci_table.tex && test -s /tmp/ci_table.docx && test -s /tmp/ci_table.png

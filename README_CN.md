@@ -25,9 +25,11 @@ EconWorkbench 是一个面向实证研究全流程的开源工作台：文献、
 
 ## 快速上手
 
-零依赖——单个纯标准库 Python 文件。
+核心零依赖（纯标准库）：
 
 ```
+pip install econworkbench        # 或: pip install .[report] 一步带表格功能
+
 # 1. 同一模型在 R / Python / Stata 各跑一遍，每个脚本输出四列 CSV：
 #    term, estimate, se, pvalue
 Rscript my_model.R            # -> r_results.csv
@@ -35,7 +37,7 @@ python  my_model.py           # -> py_results.csv
 "C:\Program Files\Stata19\StataSE-64.exe" /e do my_model.do   # -> stata_results.csv
 
 # 2. 对拍（第一个 CSV 是基准）：
-python crosscheck.py r_results.csv py_results.csv stata_results.csv
+econ-crosscheck r_results.csv py_results.csv stata_results.csv
 ```
 
 输出：
@@ -81,7 +83,7 @@ RESULT: PASS (aligned) — 退出码 0
 喂给 `crosscheck` 的同一批 CSV，直接喂给 `report`——一条命令，从估计值到期刊级三线表：
 
 ```
-python report/report.py r_results.csv py_results.csv stata_results.csv --title "表1" --out table1
+econ-report r_results.csv py_results.csv stata_results.csv --title "表1" --out table1
 # -> table1.tex（booktabs）+ table1.docx（Word 三线表）+ table1.png（预览图）
 ```
 

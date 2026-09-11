@@ -1,0 +1,4 @@
+
+[report]
+python-docx
+matplotlib

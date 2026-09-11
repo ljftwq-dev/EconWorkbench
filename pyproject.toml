@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "econworkbench"
+version = "1.2.0"
+description = "From idea to referee-ready: an open workbench for empirical research. Core: crosscheck (R/Python/Stata triple validation) + report (journal-ready three-line tables)."
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "ljftwq-dev" }]
+requires-python = ">=3.9"
+keywords = ["econometrics", "causal-inference", "difference-in-differences", "stata", "r", "reproducibility"]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering",
+]
+
+[project.optional-dependencies]
+report = ["python-docx", "matplotlib"]
+
+[project.scripts]
+econ-crosscheck = "econworkbench.crosscheck:main"
+econ-report = "econworkbench.report:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
