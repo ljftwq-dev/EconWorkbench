@@ -1,5 +1,7 @@
 # EconCrosscheck
 
+[English](README.md) | [中文](README_CN.md)
+
 **One estimator, independent implementations, one verdict.**
 
 EconCrosscheck is a cross-language validation engine for empirical research: run the *same* model in **R, Python, and Stata**, then diff the results automatically. If the numbers agree, your code is (almost certainly) right. If they don't, you stop interpreting — before a reviewer (or a referee report) stops you.
