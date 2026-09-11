@@ -1,10 +1,12 @@
-# EconCrosscheck（中文版）
+# EconWorkbench（中文版）
 
 **同一个估计量，独立实现，一个结论。**
 
 [English](README.md) | 中文
 
-EconCrosscheck 是一个面向实证研究的**跨语言交叉验证引擎**：把*同一个*模型分别在 **R、Python、Stata** 里跑一遍，自动对比结果。数字一致，说明你的代码（几乎肯定）没问题；数字不一致，先别解读结果——赶在审稿人发现之前，自己先发现。
+EconWorkbench 是一个面向实证研究全流程的开源工作台：文献、数据、设计、估计、**验证**、成表。研究的判断权永远在你手里——工作台负责让每一步更快、让数字可信。
+
+**v1.0 交付核心模块：`crosscheck/`**——把*同一个*模型分别在 **R、Python、Stata** 里跑一遍，自动对比结果。数字一致，说明你的代码（几乎肯定）没问题；数字不一致，先别解读结果——赶在审稿人发现之前，自己先发现。
 
 <p align="center">
   <img src="assets/triple_crosscheck_cs2021.png" alt="R、Python、Stata 三个终端并排复现 Callaway-Sant'Anna (2021)，三者均显示 ATT = -0.0399513" width="900">

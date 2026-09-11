@@ -1,10 +1,12 @@
-# EconCrosscheck
+# EconWorkbench
 
 [English](README.md) | [中文](README_CN.md)
 
-**One estimator, independent implementations, one verdict.**
+**From idea to referee-ready — an open workbench for empirical research.**
 
-EconCrosscheck is a cross-language validation engine for empirical research: run the *same* model in **R, Python, and Stata**, then diff the results automatically. If the numbers agree, your code is (almost certainly) right. If they don't, you stop interpreting — before a reviewer (or a referee report) stops you.
+EconWorkbench is a toolkit for the empirical-research workflow: literature, data, design, estimation, **verification**, and reporting. Research judgment stays with you — the workbench makes each step faster and the numbers trustworthy.
+
+**v1.0 ships the core: `crosscheck/`** — run the *same* model in **R, Python, and Stata**, then diff the results automatically. If the numbers agree, your code is (almost certainly) right. If they don't, you stop interpreting — before a reviewer (or a referee report) stops you.
 
 <p align="center">
   <img src="assets/triple_crosscheck_cs2021.png" alt="R, Python and Stata terminals side by side reproducing Callaway-Sant'Anna (2021), all showing ATT = -0.0399513" width="900">
