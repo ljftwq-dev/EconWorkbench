@@ -50,3 +50,19 @@ jobs:
                       examples/cs2021_mpdta/stata_results.csv \
                       --title "CI smoke table" --out /tmp/ci_table
           test -s /tmp/ci_table.tex && test -s /tmp/ci_table.docx && test -s /tmp/ci_table.png
+
+      - name: Design lint — bad study must FLAG (expect exit 1)
+        run: |
+          if econ-design --script examples/design_demo/bad_study.do \
+                         --n-clusters 12 --treatment staggered \
+                         --results examples/design_demo/events_bad.csv --out /tmp/lint_bad.md; then
+            echo "expected FLAG but got CLEAN"; exit 1
+          else
+            echo "correctly flagged the bad design"
+            test -s /tmp/lint_bad.md
+          fi
+
+      - name: Design lint — good study must be CLEAN (expect exit 0)
+        run: econ-design --script examples/design_demo/good_study.do \
+                         --n-clusters 230 --treatment staggered \
+                         --results examples/design_demo/events_clean.csv

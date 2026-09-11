@@ -11,6 +11,8 @@ EconWorkbench 是一个面向实证研究全流程的开源工作台：文献、
 
 **v1.0 交付核心模块：`crosscheck/`**——把*同一个*模型分别在 **R、Python、Stata** 里跑一遍，自动对比结果。数字一致，说明你的代码（几乎肯定）没问题；数字不一致，先别解读结果——赶在审稿人发现之前，自己先发现。
 
+**v2.0 新增 `design/`**——审稿人 checklist，可执行。在解读任何系数之前，先给你的研究设计做 lint（聚类太少、交叠 DID 用 TWFE、预趋势）。
+
 <p align="center">
   <img src="assets/triple_crosscheck_cs2021.png" alt="R、Python、Stata 三个终端并排复现 Callaway-Sant'Anna (2021)，三者均显示 ATT = -0.0399513" width="900">
 </p>
@@ -96,9 +98,28 @@ econ-report r_results.csv py_results.csv stata_results.csv --title "表1" --out 
 
 显著性星号、括号内标准误、顶线/栏目线/底线，三种格式一致。列名置于表底（`esttab` 惯例）。
 
+## 赶在审稿人之前发现设计缺陷（`design/`，v2.0）
+
+`crosscheck` 验证的是*代码*；`design` lint 的是*研究设计*。指向你的 Stata/R/Python 脚本和/或事件研究 CSV：
+
+```
+econ-design --script my_study.do --n-clusters 12 --treatment staggered --results events.csv
+# 退出码 0 = 干净（允许 WARN），1 = 发现 FLAG——与 crosscheck 一样可接入门控
+```
+
+三条确定性、可解释的规则——是 linter，不是黑盒打分。每条 finding 都写明修复动作和引文：
+
+| 规则 | 触发条件 | 建议 |
+|---|---|---|
+| `CLUSTER` | 聚类数 <30 FLAG，30-49 WARN | wild cluster bootstrap（Rademacher）——Cameron, Gelbach & Miller (2008) |
+| `STAGGER` | 交叠 DID 却用 TWFE（脚本里没有 csdid/att_gt/sunab） | 换 Callaway-Sant'Anna / Sun-Abraham——Goodman-Bacon (2021) |
+| `PRETREND` | 前期系数个体/联合显著，或单调漂移 | 报告联合检验 + Rambachan & Roth (2023) 敏感性——Roth (2022) |
+
+[`examples/design_demo/`](examples/design_demo/) 里的坏研究一次性踩中全部三条规则；好研究（csdid + boottest、230 个聚类）返回 CLEAN。两个都跑一遍就能看懂 lint 的行为。
+
 ## 它*不*做什么
 
-- 它验证不了你的**识别策略**——错误模型的两个实现会完美一致。（姊妹项目中的审稿人 checklist 覆盖聚类层级、交叠 DID 陷阱、平行趋势等。）
+- 它验证不了你的**识别策略**——错误模型的两个实现会完美一致。`design/` 只 lint 审稿人 checklist 的常见项（聚类、交叠时点、预趋势），识别的判断权在你。
 - 它不是论文工厂。选题与判断，永远留在研究者手里。
 
 ## 相关工作

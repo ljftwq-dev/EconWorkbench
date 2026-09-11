@@ -12,6 +12,8 @@ EconWorkbench is a toolkit for the empirical-research workflow: literature, data
 
 **v1.0 ships the core: `crosscheck/`** — run the *same* model in **R, Python, and Stata**, then diff the results automatically. If the numbers agree, your code is (almost certainly) right. If they don't, you stop interpreting — before a reviewer (or a referee report) stops you.
 
+**v2.0 adds `design/`** — the reviewer checklist, executable. Lint your research design (few clusters, staggered DiD on TWFE, pre-trends) before you interpret a single coefficient.
+
 <p align="center">
   <img src="assets/triple_crosscheck_cs2021.png" alt="R, Python and Stata terminals side by side reproducing Callaway-Sant'Anna (2021), all showing ATT = -0.0399513" width="900">
 </p>
@@ -97,9 +99,28 @@ econ-report r_results.csv py_results.csv stata_results.csv --title "Table 1" --o
 
 Significance stars, SEs in parentheses, top/mid/bottom rules — in all three formats. Column labels sit at the bottom, `esttab`-style.
 
+## Catch design flaws before the referee does (`design/`, v2.0)
+
+`crosscheck` validates your *code*; `design` lints your *research design*. Point it at your Stata/R/Python script and/or an event-study CSV:
+
+```
+econ-design --script my_study.do --n-clusters 12 --treatment staggered --results events.csv
+# exit 0 = clean (WARN allowed), exit 1 = FLAG found — gate-able like crosscheck
+```
+
+Three deterministic, interpretable rules — a linter, not a black-box score. Every finding names the fix and the citation:
+
+| Rule | Triggers on | Recommends |
+|---|---|---|
+| `CLUSTER` | <30 clusters FLAG, 30-49 WARN | wild cluster bootstrap (Rademacher) — Cameron, Gelbach & Miller (2008) |
+| `STAGGER` | TWFE regression under staggered adoption (no csdid/att_gt/sunab found) | Callaway-Sant'Anna / Sun-Abraham — Goodman-Bacon (2021) |
+| `PRETREND` | pre-period coefficients individually / jointly significant, or monotone drift | joint test + Rambachan & Roth (2023) sensitivity — Roth (2022) |
+
+The bad study in [`examples/design_demo/`](examples/design_demo/) trips all three rules at once; the good study (csdid + boottest, 230 clusters) comes back CLEAN. Run both to see the lint in action.
+
 ## What it does *not* do
 
-- It cannot validate your **identification strategy** — two implementations of a wrong model agree perfectly. (The companion `REVIEWER_CHECKLIST.md` in the parent project covers clustering levels, staggered-DiD pitfalls, pre-trends, etc.)
+- It cannot validate your **identification strategy** — two implementations of a wrong model agree perfectly. `design/` lints the common reviewer checklist (clustering, staggered timing, pre-trends), but identification judgment stays with you.
 - It is not a paper factory. Judgment stays with the researcher.
 
 ## Related work
