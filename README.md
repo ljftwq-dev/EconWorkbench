@@ -76,6 +76,21 @@ Result: **R ↔ Python bit-exact on all 8 quantities** (7 post-period ATT(g,t) +
 
 Run it yourself: each folder contains the three scripts, the shared dataset (`mpdta_data.csv` — one source of truth, all three languages read the same file), and the three result CSVs.
 
+## From estimates to tables (`report/`, v1.2)
+
+The same CSVs that feed `crosscheck` also feed `report` — one command from estimates to a journal-ready three-line table:
+
+```
+python report/report.py r_results.csv py_results.csv stata_results.csv --title "Table 1" --out table1
+# -> table1.tex (booktabs) + table1.docx (Word three-line) + table1.png (preview)
+```
+
+<p align="center">
+  <img src="examples/cs2021_mpdta/table1.png" alt="Three-line regression table comparing R/Python/Stata estimates" width="640">
+</p>
+
+Significance stars, SEs in parentheses, top/mid/bottom rules — in all three formats. Column labels sit at the bottom, `esttab`-style.
+
 ## What it does *not* do
 
 - It cannot validate your **identification strategy** — two implementations of a wrong model agree perfectly. (The companion `REVIEWER_CHECKLIST.md` in the parent project covers clustering levels, staggered-DiD pitfalls, pre-trends, etc.)

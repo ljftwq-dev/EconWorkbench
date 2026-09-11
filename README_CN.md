@@ -76,6 +76,21 @@ RESULT: PASS (aligned) — 退出码 0
 
 你可以自己复跑：目录里有三个脚本、共享数据集（`mpdta_data.csv`——单一数据源，三种语言读同一份文件）、以及三份结果 CSV。
 
+## 从估计值到论文表格（`report/`，v1.2）
+
+喂给 `crosscheck` 的同一批 CSV，直接喂给 `report`——一条命令，从估计值到期刊级三线表：
+
+```
+python report/report.py r_results.csv py_results.csv stata_results.csv --title "表1" --out table1
+# -> table1.tex（booktabs）+ table1.docx（Word 三线表）+ table1.png（预览图）
+```
+
+<p align="center">
+  <img src="examples/cs2021_mpdta/table1.png" alt="R/Python/Stata 三列估计对照的三线表" width="640">
+</p>
+
+显著性星号、括号内标准误、顶线/栏目线/底线，三种格式一致。列名置于表底（`esttab` 惯例）。
+
 ## 它*不*做什么
 
 - 它验证不了你的**识别策略**——错误模型的两个实现会完美一致。（姊妹项目中的审稿人 checklist 覆盖聚类层级、交叠 DID 陷阱、平行趋势等。）
