@@ -53,9 +53,7 @@ jobs:
 
       - name: Design lint — bad study must FLAG (expect exit 1)
         run: |
-          if econ-design --script examples/design_demo/bad_study.do \
-                         --n-clusters 12 --treatment staggered \
-                         --results examples/design_demo/events_bad.csv --out /tmp/lint_bad.md; then
+          if econ-design --script examples/design_demo/bad_study.do --n-clusters 12 --treatment staggered --results examples/design_demo/events_bad.csv --out /tmp/lint_bad.md; then
             echo "expected FLAG but got CLEAN"; exit 1
           else
             echo "correctly flagged the bad design"
@@ -63,6 +61,4 @@ jobs:
           fi
 
       - name: Design lint — good study must be CLEAN (expect exit 0)
-        run: econ-design --script examples/design_demo/good_study.do \
-                         --n-clusters 230 --treatment staggered \
-                         --results examples/design_demo/events_clean.csv
+        run: econ-design --script examples/design_demo/good_study.do --n-clusters 230 --treatment staggered --results examples/design_demo/events_clean.csv
