@@ -2,3 +2,6 @@
 __pycache__/
 .DS_Store
 *.egg-info/
+build/
+dist/
+examples/design_demo/lint_*.md
