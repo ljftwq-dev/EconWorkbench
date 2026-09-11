@@ -4,6 +4,9 @@
 
 [English](README.md) | 中文
 
+[![CI](https://github.com/ljftwq-dev/EconWorkbench/actions/workflows/ci.yml/badge.svg)](https://github.com/ljftwq-dev/EconWorkbench/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/econworkbench.svg)](https://pypi.org/project/econworkbench/)
+
 EconWorkbench 是一个面向实证研究全流程的开源工作台：文献、数据、设计、估计、**验证**、成表。研究的判断权永远在你手里——工作台负责让每一步更快、让数字可信。
 
 **v1.0 交付核心模块：`crosscheck/`**——把*同一个*模型分别在 **R、Python、Stata** 里跑一遍，自动对比结果。数字一致，说明你的代码（几乎肯定）没问题；数字不一致，先别解读结果——赶在审稿人发现之前，自己先发现。

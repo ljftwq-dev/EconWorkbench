@@ -2,8 +2,8 @@
 
 v1.0 ✅ Triple-implementation crosscheck engine + Callaway & Sant'Anna (2021) replication + bilingual README
 
-v1.1 🔜 **CI template** — fork and run the Python-side crosscheck in GitHub Actions; `pip install econcrosscheck`
-v1.2 **`report/`** — unified regression-table exporter: consume the same result CSVs, emit LaTeX / Word three-line (booktabs) tables, Stata `esttab`-style — one command from estimates to submission-ready table
+v1.1 ✅ pip-installable package (`econ-crosscheck` / `econ-report` CLIs) + GitHub Actions CI (positive & negative smoke tests)
+v1.2 ✅ **`report/`** — unified regression-table exporter: LaTeX / Word three-line (booktabs) tables, PNG preview — one command from estimates to submission-ready table; **published to PyPI as `econworkbench` 1.2.0**
 
 v2.0 **`design/`** — the reviewer checklist, executable: cluster-count lint (warn when clusters < 50 → suggest wild cluster bootstrap), staggered-DiD detection (suggest CS estimator when treatment timing varies), pre-trend pre-flight — an interpretable linter, not a black-box score
 v2.1 **`lit/`** — NBER / SSRN / RePEc search wrappers to close the social-science literature gap (arXiv coverage is STEM-only)
