@@ -10,7 +10,7 @@
 EconWorkbench 是一个面向实证研究全流程的开源工作台：文献、设计、估计、**验证**、成表。研究的判断权永远在你手里——工作台负责让每一步更快、让数字可信。
 
 ```mermaid
-flowchart LR
+flowchart TD
     A["📚 文献"] --> B["🌀 漏斗"]
     B -->|"签 G0"| C["🚀 econ-pipeline"]
     C --> D["⚙️ 数据 · 实证"]

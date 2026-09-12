@@ -11,7 +11,7 @@
 EconWorkbench covers the empirical-research workflow: literature, design, estimation, **verification**, and reporting. Research judgment stays with you — the workbench makes each step faster and the numbers trustworthy.
 
 ```mermaid
-flowchart LR
+flowchart TD
     A["📚 Literature"] --> B["🌀 Funnel"]
     B -->|"sign G0"| C["🚀 econ-pipeline"]
     C --> D["⚙️ data · estimate"]
