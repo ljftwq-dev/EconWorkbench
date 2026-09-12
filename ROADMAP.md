@@ -9,7 +9,9 @@ v2.0 ✅ **`design/`** — the reviewer checklist, executable: cluster-count lin
 v2.1 ⏸️ (deferred) **`lit/`** — NBER / SSRN / RePEc search wrappers. Deferred 2026-09-11: personal workflow covered by MCPs (arxiv for methods, CNKI/NCPSSD for Chinese lit, web search for NBER/SSRN). Revisit only if product users ask for a built-in lit module.
 v2.2 **`data/`** — CFPS / CHFS ingestion pipelines (pipes only, never the data — respect licenses)
 
-v3.0 **Integration validation** — one real paper (housing-market index × domestic demand, time-varying relationship) driven through the full chain: idea → literature → data → design → estimation → crosscheck → review → writing. 🟢 0911: case 1 archived — `examples/bai_perron_breakpoints/` (hand-rolled exact DP vs strucchange, PASS bit-exact ≤4.3e-14, two real bugs caught on the way; conditional-breakpoint national narrative + provincial TWFE + CS-style event study delivered same day — see research snapshot)
+v3.0 **Integration validation** — one real paper (housing-market index × domestic demand, time-varying relationship) driven through the full chain: idea → literature → data → design → estimation → crosscheck → review → writing. 🟢 0911: case 1 archived — `examples/bai_perron_breakpoints/` (hand-rolled exact DP vs strucchange, PASS bit-exact ≤4.3e-14, two real bugs caught on the way)
+
+v4.0 **`pipeline/`** — the spec2paper driver as a first-class module: `econ-pipeline` CLI, 11-step orchestrator (gate0 → data → estimate → crosscheck → lint → report → draft → data_audit → number_check → format_check → gate1), stop-on-failure with persisted state, `--ci` mode (gates green, failures red) for push-time re-verification; docs add the L0 literature layer + funnel protocol + showcase transcripts. 🟢 0912: shipped; literature/brainstorm-to-audit journey now the README spine
 
 ## How we differ
 

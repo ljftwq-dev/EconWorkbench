@@ -1,0 +1,40 @@
+# ci-driver.yml — 论文流水线 GitHub Actions 模板（showyourwork 模式：push 即全链验证）
+# 用法：论文项目 repo 化后，把本文件放 .github/workflows/ci-driver.yml，
+#       卡片（spec_card*.md）放仓库根目录，按需修改 CARD 路径与 Python/R 依赖。
+name: research-pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: |
+          pip install econworkbench pandas pyfixest pyyaml
+          sudo apt-get update && sudo apt-get install -y r-base r-cran-strucchange || true
+
+      - name: Run pipeline driver (CI mode)
+        env:
+          PIPELINE_CI: "1"
+        run: |
+          python <driver.py 所在路径或仓库内路径> <卡片.md> --ci --reset
+        # --ci：门控暂停=绿；真失败（crosscheck FAIL / lint FLAG / 审查停机）= 红
+        # --reset：CI 每次从零复现（本地状态文件不进仓库）
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pipeline-artifacts
+          path: |
+            results/
+            draft/

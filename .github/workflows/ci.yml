@@ -62,3 +62,15 @@ jobs:
 
       - name: Design lint — good study must be CLEAN (expect exit 0)
         run: econ-design --script examples/design_demo/good_study.do --n-clusters 230 --treatment staggered --results examples/design_demo/events_clean.csv
+
+      - name: Pipeline smoke — gate0 halts unsigned, then full chain in CI mode
+        run: |
+          pip install ".[pipeline]"
+          cd examples/pipeline_demo
+          if econ-pipeline demo_card.md; then echo "expected gate0 halt"; exit 1; else echo "gate0 correctly halted (exit 1)"; fi
+          python - <<'EOF'
+          c = open('demo_card.md', encoding='utf-8').read().replace('G0_放行: 空', 'G0_放行: ci-bot 2026')
+          open('demo_card.md', 'w', encoding='utf-8').write(c)
+          EOF
+          econ-pipeline demo_card.md --ci --reset
+          test -s smoke_wd/draft/初稿骨架.md && test -s smoke_wd/draft/初稿骨架.tex

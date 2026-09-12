@@ -5,3 +5,5 @@ __pycache__/
 build/
 dist/
 examples/design_demo/lint_*.md
+
+examples/pipeline_demo/smoke_wd/
