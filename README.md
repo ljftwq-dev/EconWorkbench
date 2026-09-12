@@ -84,6 +84,16 @@ Result: **R ↔ Python bit-exact on all 8 quantities** (7 post-period ATT(g,t) +
 
 Run it yourself: each folder contains the three scripts, the shared dataset (`mpdta_data.csv` — one source of truth, all three languages read the same file), and the three result CSVs.
 
+## Example: Bai-Perron structural breaks — when crosschecking catches *your* bugs
+
+[`examples/bai_perron_breakpoints/`](examples/bai_perron_breakpoints/) validates a hand-rolled exact-DP Bai-Perron (numpy) against `strucchange::breakpoints()` on a rolling-beta series (housing × retail, 165 monthly obs):
+
+- **PASS (bit-exact)** after fixes: |ΔRSS| ≤ 4.3e-14 on all comparable k, identical breakpoints, both BICs pick k = 2.
+- **Two real bugs caught on the way**: a Python DP backtracking flaw that silently returned wrong breakpoints, and an R `ts()` contiguous-month assumption that mislabeled a breakpoint's *date* (2018-11 vs the true 2020-04) while the fit itself was perfect.
+- **Implementation boundaries are part of the verdict**: for k ≥ 3 `strucchange` caps the solution at 2 breaks; `compare.py` grades those rows N/A instead of FAIL — and the README explains why the distinction matters.
+
+This is the case that motivated the project: two implementations that each looked fine alone, and only disagreed loudly enough to debug *because* they were compared.
+
 ## From estimates to tables (`report/`, v1.2)
 
 The same CSVs that feed `crosscheck` also feed `report` — one command from estimates to a journal-ready three-line table:

@@ -6,10 +6,10 @@ v1.1 ✅ pip-installable package (`econ-crosscheck` / `econ-report` CLIs) + GitH
 v1.2 ✅ **`report/`** — unified regression-table exporter: LaTeX / Word three-line (booktabs) tables, PNG preview — one command from estimates to submission-ready table; **published to PyPI as `econworkbench` 1.2.0**
 
 v2.0 ✅ **`design/`** — the reviewer checklist, executable: cluster-count lint (FLAG <30 / WARN <50 → wild cluster bootstrap), staggered-DiD detection (FLAG TWFE under staggered adoption → CS/SA estimators), pre-trend pre-flight (individual + joint chi2 + monotone drift) — every finding carries the fix and the citation; `econ-design` CLI; published as 2.0.0
-v2.1 **`lit/`** — NBER / SSRN / RePEc search wrappers to close the social-science literature gap (arXiv coverage is STEM-only)
+v2.1 ⏸️ (deferred) **`lit/`** — NBER / SSRN / RePEc search wrappers. Deferred 2026-09-11: personal workflow covered by MCPs (arxiv for methods, CNKI/NCPSSD for Chinese lit, web search for NBER/SSRN). Revisit only if product users ask for a built-in lit module.
 v2.2 **`data/`** — CFPS / CHFS ingestion pipelines (pipes only, never the data — respect licenses)
 
-v3.0 **Integration validation** — one real paper (housing-market index × domestic demand, time-varying relationship) driven through the full chain: idea → literature → data → design → estimation → crosscheck → review → writing
+v3.0 **Integration validation** — one real paper (housing-market index × domestic demand, time-varying relationship) driven through the full chain: idea → literature → data → design → estimation → crosscheck → review → writing. 🟢 0911: case 1 archived — `examples/bai_perron_breakpoints/` (hand-rolled exact DP vs strucchange, PASS bit-exact ≤4.3e-14, two real bugs caught on the way; conditional-breakpoint national narrative + provincial TWFE + CS-style event study delivered same day — see research snapshot)
 
 ## How we differ
 

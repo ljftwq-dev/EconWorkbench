@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "econworkbench"
-version = "2.0.0"
+version = "3.0.0"
 description = "From idea to referee-ready: an open workbench for empirical research. Core: crosscheck (R/Python/Stata triple validation) + report (journal-ready three-line tables)."
 readme = "README.md"
 license = { file = "LICENSE" }

@@ -83,6 +83,16 @@ RESULT: PASS (aligned) — 退出码 0
 
 你可以自己复跑：目录里有三个脚本、共享数据集（`mpdta_data.csv`——单一数据源，三种语言读同一份文件）、以及三份结果 CSV。
 
+## 示例：Bai-Perron 结构断点——对拍抓的就是你自己的虫
+
+[`examples/bai_perron_breakpoints/`](examples/bai_perron_breakpoints/) 用手写精确 DP（numpy）对拍 `strucchange::breakpoints()`，数据是滚动β序列（房地产×社零，165 个月度观测）：
+
+- 修复后 **PASS (bit-exact)**：可比的 k 上 |ΔRSS| ≤ 4.3e-14，断点完全一致，双侧 BIC 同选 k=2
+- **路上抓到两个真虫**：① Python DP 回溯跨 j 取 argmin，静默返回错误断点；② R `ts()` 假设月份连续，而序列每年缺 1 月——断点*日期*被标错（2018-11 vs 真实 2020-04），拟合本身却是对的
+- **实现边界也是裁决的一部分**：k≥3 时 strucchange 内部封顶只回 2 个断点，`compare.py` 将这些行判 N/A 而非 FAIL——两者的区别 README 里有讲
+
+这就是催生本项目的案例：两套单独看都"对"的实现，只有被放在一起比对，才会吵得足够响、把虫逼出来。
+
 ## 从估计值到论文表格（`report/`，v1.2）
 
 喂给 `crosscheck` 的同一批 CSV，直接喂给 `report`——一条命令，从估计值到期刊级三线表：
