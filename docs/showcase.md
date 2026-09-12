@@ -76,7 +76,7 @@ gate0 ─ data ─ estimate ─ crosscheck ─ lint ─ report ─ draft
 **全链跑通**（G0 签名后）：
 
 ```
-[gate0] 已放行：李嘉丰 2026-09-11
+[gate0] 已放行：the author, 2026-09-11
 [crosscheck] py_results vs r_results: bit-exact 3 | aligned 0 | FAIL 0
 RESULT: PASS (bit-exact)
 [lint] EconWorkbench design lint | clusters: 70
