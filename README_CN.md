@@ -9,9 +9,16 @@
 
 EconWorkbench 是一个面向实证研究全流程的开源工作台：文献、数据、设计、估计、**验证**、成表。研究的判断权永远在你手里——工作台负责让每一步更快、让数字可信。
 
-**v1.0 交付核心模块：`crosscheck/`**——把*同一个*模型分别在 **R、Python、Stata** 里跑一遍，自动对比结果。数字一致，说明你的代码（几乎肯定）没问题；数字不一致，先别解读结果——赶在审稿人发现之前，自己先发现。
+## 模块速览
 
-**v2.0 新增 `design/`**——审稿人 checklist，可执行。在解读任何系数之前，先给你的研究设计做 lint（聚类太少、交叠 DID 用 TWFE、预趋势）。
+| 模块 | CLI 命令 | 干什么 | 版本 |
+|---|---|---|---|
+| `crosscheck/` | `econ-crosscheck` | 把*同一个*模型在 **R / Python / Stata** 里各跑一遍，自动对比，一个结论：`bit-exact` / `aligned` / `FAIL` | v1.0 |
+| `report/` | `econ-report` | 结果 CSV → 期刊级三线表（`.tex` / `.docx` / `.png`），一条命令 | v1.2 |
+| `design/` | `econ-design` | 解读系数之前先给研究设计做 lint：聚类太少、交叠 DID 用 TWFE、预趋势 | v2.0 |
+| 集成案例 | — | 一篇真实论文走完全链路，各阶段产物归档为可复跑的 `examples/` | v3.0 |
+
+所有 CLI 都有 0/1 退出码——任何一个模块都可以直接接进 CI、Makefile 或 SDD 流水线当发布门用。
 
 <p align="center">
   <img src="assets/triple_crosscheck_cs2021.png" alt="R、Python、Stata 三个终端并排复现 Callaway-Sant'Anna (2021)，三者均显示 ATT = -0.0399513" width="900">
@@ -67,9 +74,15 @@ RESULT: PASS (aligned) — 退出码 0
 | `aligned` | 容差内一致 | Δ系数 ≤ 1e-6，ΔSE/SE ≤ 1e-4，Δp ≤ 1e-4 |
 | `FAIL` | 显著性翻转或超出容差 | — 退出码 1 |
 
-退出码可接入门控：CI、Makefile，或你自己的 SDD 流水线，当发布门用。
+## v3.0：一篇真实论文走完全链路
 
-## 示例：Callaway & Sant'Anna (2021) 复现
+v3.0 从"交付工具"转向"交付证明"：一个进行中的真实研究项目——**房地产市场指数 × 内需**（时变关系研究）——正在被推过全链路：想法 → 数据 → 设计 → 估计 → 对拍 → 成表。每个阶段的产物都归档为可复跑的示例，这个项目自己的结论可以从本仓库复现。
+
+**案例一（2026-09）：论文的结构断点引擎。** 论文的滚动β Bai-Perron 分析——手写精确 DP 实现——对拍 `strucchange::breakpoints()`。修复后裁决：**PASS (bit-exact)，|ΔRSS| ≤ 4.3e-14**，而且对拍本身在任何数字被解读之前就抓出了两个真实 bug（战况详见该示例的 README）。持续更新的集成日志在 [ROADMAP.md](ROADMAP.md)。
+
+## 示例
+
+### Callaway & Sant'Anna (2021) 复现
 
 [`examples/cs2021_mpdta/`](examples/cs2021_mpdta/) 用三套实现复现了交叠 DID 的经典应用（最低工资对青少年就业的影响，2,500 个县-年观测）：
 
@@ -83,17 +96,17 @@ RESULT: PASS (aligned) — 退出码 0
 
 你可以自己复跑：目录里有三个脚本、共享数据集（`mpdta_data.csv`——单一数据源，三种语言读同一份文件）、以及三份结果 CSV。
 
-## 示例：Bai-Perron 结构断点——对拍抓的就是你自己的虫
+### Bai-Perron 结构断点——对拍抓的就是你自己的 bug
 
 [`examples/bai_perron_breakpoints/`](examples/bai_perron_breakpoints/) 用手写精确 DP（numpy）对拍 `strucchange::breakpoints()`，数据是滚动β序列（房地产×社零，165 个月度观测）：
 
 - 修复后 **PASS (bit-exact)**：可比的 k 上 |ΔRSS| ≤ 4.3e-14，断点完全一致，双侧 BIC 同选 k=2
-- **路上抓到两个真虫**：① Python DP 回溯跨 j 取 argmin，静默返回错误断点；② R `ts()` 假设月份连续，而序列每年缺 1 月——断点*日期*被标错（2018-11 vs 真实 2020-04），拟合本身却是对的
-- **实现边界也是裁决的一部分**：k≥3 时 strucchange 内部封顶只回 2 个断点，`compare.py` 将这些行判 N/A 而非 FAIL——两者的区别 README 里有讲
+- **路上抓到两个真实的 bug**：① Python DP 回溯跨 j 取 argmin，静默返回错误断点；② R `ts()` 假设月份连续，而序列每年缺 1 月——断点*日期*被标错（2018-11 vs 真实 2020-04），拟合本身却是对的
+- **实现边界也是裁决的一部分**：k≥3 时 strucchange 内部封顶只回 2 个断点，`compare.py` 将这些行判 N/A 而非 FAIL——两者的区别示例 README 里有讲
 
-这就是催生本项目的案例：两套单独看都"对"的实现，只有被放在一起比对，才会吵得足够响、把虫逼出来。
+这就是催生本项目的案例：两套单独看都"对"的实现，只有被放在一起比对，才会吵得足够响、把 bug 逼出来。
 
-## 从估计值到论文表格（`report/`，v1.2）
+## 从估计值到论文表格（`report/`）
 
 喂给 `crosscheck` 的同一批 CSV，直接喂给 `report`——一条命令，从估计值到期刊级三线表：
 
@@ -108,7 +121,7 @@ econ-report r_results.csv py_results.csv stata_results.csv --title "表1" --out 
 
 显著性星号、括号内标准误、顶线/栏目线/底线，三种格式一致。列名置于表底（`esttab` 惯例）。
 
-## 赶在审稿人之前发现设计缺陷（`design/`，v2.0）
+## 赶在审稿人之前发现设计缺陷（`design/`）
 
 `crosscheck` 验证的是*代码*；`design` lint 的是*研究设计*。指向你的 Stata/R/Python 脚本和/或事件研究 CSV：
 

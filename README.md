@@ -8,11 +8,18 @@
 
 **From idea to referee-ready — an open workbench for empirical research.**
 
-EconWorkbench is a toolkit for the empirical-research workflow: literature, data, design, estimation, **verification**, and reporting. Research judgment stays with you — the workbench makes each step faster and the numbers trustworthy.
+EconWorkbench covers the empirical-research workflow: literature, data, design, estimation, **verification**, and reporting. Research judgment stays with you — the workbench makes each step faster and the numbers trustworthy.
 
-**v1.0 ships the core: `crosscheck/`** — run the *same* model in **R, Python, and Stata**, then diff the results automatically. If the numbers agree, your code is (almost certainly) right. If they don't, you stop interpreting — before a reviewer (or a referee report) stops you.
+## Modules at a glance
 
-**v2.0 adds `design/`** — the reviewer checklist, executable. Lint your research design (few clusters, staggered DiD on TWFE, pre-trends) before you interpret a single coefficient.
+| Module | CLI | What it does | Since |
+|---|---|---|---|
+| `crosscheck/` | `econ-crosscheck` | Run the *same* model in **R / Python / Stata**, diff results automatically, one verdict: `bit-exact` / `aligned` / `FAIL` | v1.0 |
+| `report/` | `econ-report` | Result CSVs → journal-ready three-line tables (`.tex` / `.docx` / `.png`) in one command | v1.2 |
+| `design/` | `econ-design` | Research-design lint before you interpret a single coefficient: few clusters, staggered DiD on TWFE, pre-trends | v2.0 |
+| Integration cases | — | One real paper driven through the full chain, stage artifacts archived as runnable `examples/` | v3.0 |
+
+Every CLI exits 0/1, so any module can gate CI, a Makefile, or an SDD pipeline.
 
 <p align="center">
   <img src="assets/triple_crosscheck_cs2021.png" alt="R, Python and Stata terminals side by side reproducing Callaway-Sant'Anna (2021), all showing ATT = -0.0399513" width="900">
@@ -68,9 +75,15 @@ RESULT: PASS (aligned) — exit code 0
 | `aligned` | Agreement within tolerance | Δcoef ≤ 1e-6, ΔSE/SE ≤ 1e-4, Δp ≤ 1e-4 |
 | `FAIL` | Significance flips or tolerance breached | — exit code 1 |
 
-Exit codes make it gate-able: wire it into CI, a Makefile, or your SDD pipeline as a release gate.
+## v3.0: one real paper, end to end
 
-## Example: Callaway & Sant'Anna (2021) replication
+v3.0 shifts from tools to proof: a live research project — **housing-market index × domestic demand** (a time-varying relationship study) — is being driven through the full chain: idea → data → design → estimation → crosscheck → report. Each stage's artifacts are archived as runnable examples, so the project's own claims are reproducible from this repo.
+
+**Case 1 (2026-09): the study's structural-break engine.** The paper's rolling-beta Bai-Perron analysis — a hand-rolled exact-DP implementation — crosschecked against `strucchange::breakpoints()`. Verdict after fixes: **PASS (bit-exact), |ΔRSS| ≤ 4.3e-14**, with the comparison itself catching two real bugs before any number was interpreted (see the example README for the war story). The running integration log lives in [ROADMAP.md](ROADMAP.md).
+
+## Examples
+
+### Callaway & Sant'Anna (2021) replication
 
 [`examples/cs2021_mpdta/`](examples/cs2021_mpdta/) replicates the canonical staggered-DiD application (minimum-wage effects on teen employment, 2,500 county-year obs) three ways:
 
@@ -84,17 +97,17 @@ Result: **R ↔ Python bit-exact on all 8 quantities** (7 post-period ATT(g,t) +
 
 Run it yourself: each folder contains the three scripts, the shared dataset (`mpdta_data.csv` — one source of truth, all three languages read the same file), and the three result CSVs.
 
-## Example: Bai-Perron structural breaks — when crosschecking catches *your* bugs
+### Bai-Perron structural breaks — when crosschecking catches *your* bugs
 
 [`examples/bai_perron_breakpoints/`](examples/bai_perron_breakpoints/) validates a hand-rolled exact-DP Bai-Perron (numpy) against `strucchange::breakpoints()` on a rolling-beta series (housing × retail, 165 monthly obs):
 
 - **PASS (bit-exact)** after fixes: |ΔRSS| ≤ 4.3e-14 on all comparable k, identical breakpoints, both BICs pick k = 2.
 - **Two real bugs caught on the way**: a Python DP backtracking flaw that silently returned wrong breakpoints, and an R `ts()` contiguous-month assumption that mislabeled a breakpoint's *date* (2018-11 vs the true 2020-04) while the fit itself was perfect.
-- **Implementation boundaries are part of the verdict**: for k ≥ 3 `strucchange` caps the solution at 2 breaks; `compare.py` grades those rows N/A instead of FAIL — and the README explains why the distinction matters.
+- **Implementation boundaries are part of the verdict**: for k ≥ 3 `strucchange` caps the solution at 2 breaks; `compare.py` grades those rows N/A instead of FAIL — and the example README explains why the distinction matters.
 
 This is the case that motivated the project: two implementations that each looked fine alone, and only disagreed loudly enough to debug *because* they were compared.
 
-## From estimates to tables (`report/`, v1.2)
+## From estimates to tables (`report/`)
 
 The same CSVs that feed `crosscheck` also feed `report` — one command from estimates to a journal-ready three-line table:
 
@@ -109,7 +122,7 @@ econ-report r_results.csv py_results.csv stata_results.csv --title "Table 1" --o
 
 Significance stars, SEs in parentheses, top/mid/bottom rules — in all three formats. Column labels sit at the bottom, `esttab`-style.
 
-## Catch design flaws before the referee does (`design/`, v2.0)
+## Catch design flaws before the referee does (`design/`)
 
 `crosscheck` validates your *code*; `design` lints your *research design*. Point it at your Stata/R/Python script and/or an event-study CSV:
 
