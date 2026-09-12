@@ -11,16 +11,16 @@ EconWorkbench 是一个面向实证研究全流程的开源工作台：文献、
 
 ```mermaid
 flowchart LR
-    A[📚 文献 L0\n文献卡→Gap定位图] --> B[🌀 漏斗 brainstorm\n一句话→spec卡片]
-    B -->|签 G0| C[🚀 econ-pipeline]
-    C --> D[⚙️ 数据→实证]
-    D --> E[🔍 跨语言对拍\nR vs Python vs Stata]
-    E --> F[📋 设计 lint]
-    F --> G[📊 三线表]
-    G --> H[📝 初稿 md + LaTeX]
-    H --> I[🛡️ 数据/数字/格式 三重审查]
-    I -->|签 G1| J[✅ referee-ready]
-    J -.->|push 即验| K[🔁 CI 持续复现]
+    A["📚 文献"] --> B["🌀 漏斗"]
+    B -->|"签 G0"| C["🚀 econ-pipeline"]
+    C --> D["⚙️ 数据 · 实证"]
+    D --> E["🔍 跨语言对拍"]
+    E --> F["📋 设计 lint"]
+    F --> G["📊 三线表"]
+    G --> H["📝 初稿<br/>md + LaTeX"]
+    H --> I["🛡️ 三重审查"]
+    I -->|"签 G1"| J["✅ referee-ready"]
+    J -.->|"每次 push"| K["🔁 CI"]
 ```
 
 ## 模块速览

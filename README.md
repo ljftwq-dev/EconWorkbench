@@ -12,16 +12,16 @@ EconWorkbench covers the empirical-research workflow: literature, design, estima
 
 ```mermaid
 flowchart LR
-    A[📚 Literature\nL0: cards → gap map] --> B[🌀 Funnel\nidea → spec card]
-    B -->|sign G0| C[🚀 econ-pipeline]
-    C --> D[⚙️ data → estimate]
-    D --> E[🔍 crosscheck\nR vs Python vs Stata]
-    E --> F[📋 design lint]
-    F --> G[📊 three-line tables]
-    G --> H[📝 draft md + LaTeX]
-    H --> I[🛡️ data / number / format audits]
-    I -->|sign G1| J[✅ referee-ready]
-    J -.->|push, forever| K[🔁 CI re-verifies]
+    A["📚 Literature"] --> B["🌀 Funnel"]
+    B -->|"sign G0"| C["🚀 econ-pipeline"]
+    C --> D["⚙️ data · estimate"]
+    D --> E["🔍 crosscheck"]
+    E --> F["📋 design lint"]
+    F --> G["📊 tables"]
+    G --> H["📝 draft<br/>md + LaTeX"]
+    H --> I["🛡️ 3 audits"]
+    I -->|"sign G1"| J["✅ referee-ready"]
+    J -.->|"every push"| K["🔁 CI"]
 ```
 
 ## Modules at a glance
